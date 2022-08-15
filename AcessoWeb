@@ -1,0 +1,80 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+/*
+<dependency>
+<groupId>org.apache.httpcomponents</groupId>
+<artifactId>httpclient</artifactId>
+<version>4.1.1</version>
+</dependency>
+*/
+
+//https://api.dicionario-aberto.net/index.html
+
+public class AcessoWeb {
+
+    public static void main(String[] args) {
+    }
+    public static String sortearPalavra () {
+        String palavra = "";
+        try {
+
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet getRequest = new HttpGet(
+                    "https://api.dicionario-aberto.net/random"
+//                    "http://localhost:8080/RESTfulExample/json/product/get"
+            );
+            getRequest.addHeader("accept", "application/json");
+
+            HttpResponse response = httpClient.execute(getRequest);
+
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + response.getStatusLine().getStatusCode());
+            }
+
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader((response.getEntity().getContent())));
+
+            String linha;
+            //System.out.println("Output from Server .... \n");
+            linha = br.readLine();
+            
+            //System.out.println(linha);
+            
+            int posicao = linha.indexOf("word");
+            int contador = posicao + 7;
+            char letra;
+            //System.out.println(posicao);
+            letra = linha.charAt(contador);
+            
+            while (letra != '"')
+            {
+              palavra = palavra + letra;
+              contador++;
+              letra = linha.charAt(contador);
+              //System.out.println(letra);
+            }
+            
+            //System.out.println(palavra);
+            
+            httpClient.getConnectionManager().shutdown();
+
+        } catch (ClientProtocolException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+        return palavra;
+    }
+
+}
