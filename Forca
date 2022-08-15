@@ -1,0 +1,181 @@
+import java.util.Scanner;
+import java.util.Random;
+public class Forca
+{
+    //Desenha a forca de acordo com o número de erros
+    public static void desenhaForca (int erros) {
+        System.out.println ("        ____");
+        System.out.println ("        |        |");
+        if (erros == 0) {
+
+            System.out.println ("                 |");
+            System.out.println ("                 |" );
+            System.out.println ("                 |" );
+            System.out.println ("                 |" );
+
+        }
+        if (erros == 1) {
+
+            System.out.println ("        O        |");
+            System.out.println ("                 |" );
+            System.out.println ("                 |" );
+            System.out.println ("                 |" );
+        }
+        if (erros == 2) {
+
+            System.out.println ("        O        |");
+            System.out.println ("        |        |");
+            System.out.println ("        |        |"  );
+            System.out.println ("                 |" );
+
+        }
+        if (erros == 3) {
+
+            System.out.println ("        O        |");
+            System.out.println ("        |        |");
+            System.out.println ("        |        |" );
+            System.out.println ("       /         |" );
+
+        }
+        if (erros == 4) {
+
+            System.out.println ("        O        |");
+            System.out.println ("        |        |" );
+            System.out.println ("        |        |" );
+            System.out.println ("       / \\       |" );
+
+        }
+        if (erros == 5) {
+
+            System.out.println ("        O        |");
+            System.out.println ("       /|        |" );
+            System.out.println ("        |        |" );
+            System.out.println ("       / \\       |" );
+
+        }
+        if (erros == 6) {
+
+            System.out.println ("        O        |");
+            System.out.println ("       /|\\       |" );
+            System.out.println ("        |        |" );
+            System.out.println ("       / \\       |" );
+
+        }
+        System.out.println ("              __ |");
+        System.out.println ("           __|   |");
+        System.out.println ("        __|      |");
+        System.out.println ("       |___|");
+    }
+
+
+    // Converte a String original (maiúsculas) em uma String convertida sem acentos
+    public static String converteAcentos (String original) {
+        String convertida = "";
+        for (int i = 0; i < original.length() ; i++) {
+            char caracter = original.charAt(i);
+            switch (caracter) {
+                case 'Á': ;
+                case 'À': ;
+                case 'Ã': ;
+                case 'Â': 
+                    caracter = 'A';
+                    break;
+                case 'É': ;
+                case 'Ê':
+                    caracter = 'E';
+                    break;
+                case 'Í': caracter = 'I';
+                    break;
+                case 'Ó': ;
+                case 'Õ': ;
+                case 'Ô' : ;
+                    caracter = 'O';
+                    break;
+                case 'Ú': caracter = 'U';
+                    break;
+                case 'Ç': caracter = 'C';
+                    break;
+            }
+            convertida += caracter;
+        }
+        return convertida;
+    }
+    
+    public static void main (String[] args) {
+        int numErros = 0;   
+        String palavraOriginalSorteada, palavraSorteada;
+        
+        String letrasDigitadas = "";
+        
+        String revelacao = "";
+        
+        Scanner entrada  = new Scanner(System.in);
+        
+        boolean acertou = false;
+        
+        String letra;
+        
+            //desenhaForca (i);
+        //palavraOriginalSorteada = sorteiaPalavra().toUpperCase();
+        palavraOriginalSorteada = AcessoWeb.sortearPalavra().toUpperCase();
+        
+        palavraSorteada = converteAcentos(palavraOriginalSorteada);
+        
+        for (int i = 0; i < palavraSorteada.length();i++) {
+            revelacao += "_";
+        }
+        
+        //System.out.println ("Palavra sorteada: " + palavraSorteada);
+        System.out.println (" Revelação: " + revelacao);
+       
+        while (numErros < 6 && acertou == false) {
+           System.out.print ("Digite uma letra: ");
+           String palavra;
+           String letras;
+           palavra = entrada.nextLine();
+           palavra = palavra.toUpperCase();
+           letra = palavra.charAt(0) + "";
+           
+           letras = letra ;
+           // Easteregg
+           if(letra.equals("%"))
+               acertou = true;
+           System.out.println (letra);
+           
+           if (letrasDigitadas.contains(letra)){
+                   System.out.println("Letra já foi digitada ");
+                }
+           else {
+               letrasDigitadas += letra;
+               if (!palavraSorteada.contains(letra)) {
+                    numErros++;
+                    }
+               else{
+                    String temp = "";
+                    for (int i = 0; i < palavraSorteada.length();i++) {
+                        if (palavraSorteada.charAt(i) == letra.charAt(0)) {
+                            temp += letra;
+                        }
+                        else 
+                            temp += revelacao.charAt(i);
+                    }
+                    revelacao = temp;
+                    if (revelacao.equals (palavraSorteada)){
+                        acertou = true;
+                    }
+                    }
+               }
+           desenhaForca (numErros);
+           System.out.println (" Revelação       : " + revelacao);
+           System.out.println ("Letras digitadas: " + letrasDigitadas);
+        }
+        if (acertou == true)
+            System.out.print ("Parabéns! Você ganhou :) ");
+        else {
+            System.out.println ("Que pena! Você perdeu :(  ");
+            System.out.print ("Resposta: " + palavraOriginalSorteada);
+        }
+         
+            
+    }
+}
